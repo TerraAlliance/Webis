@@ -3,76 +3,80 @@ import * as THREE from "three"
 // import { Line } from "@react-three/drei"
 import { useSpringValue } from "@react-spring/three"
 
-import { Window } from "../3dgui/Window"
+import { Window } from "./Window"
 import { hsl } from "./helpers"
 
 export function ScrollingWindow({ position, width, height, children }) {
   const pointCount = 1000
   const scroll = useRef(0)
+  const curve = useMemo(() => createCapsuleCurve(20, height - 30), [height])
 
-  const curve = useMemo(() => createCapsuleCurve(25, height - 50), [height])
-
-  const texture = useMemo(() => {
-    const frames = curve.computeFrenetFrames(pointCount - 1, true)
-    const textureArray = new Float32Array([
-      ...curve.getSpacedPoints(pointCount - 1).flatMap((v) => [v.x, v.y, v.z, 0.0]),
-      ...frames.binormals.flatMap((v) => [v.x, v.y, v.z, 0.0]),
-      ...frames.normals.flatMap((v) => [v.x, v.y, v.z, 0.0]),
-      // ...frames.tangents.flatMap((v) => [v.x, v.y, v.z, 0.0]),
+  const dataTexture = useMemo(() => {
+    const points = curve.getSpacedPoints(pointCount)
+    const frames = curve.computeFrenetFrames(pointCount, true)
+    const dataArray = new Float32Array([
+      ...points.slice(0, pointCount).flatMap((v) => [v.x, v.y, v.z, 0.0]),
+      ...frames.tangents.slice(0, pointCount).flatMap((v) => [v.x, v.y, v.z, 0.0]),
+      ...frames.normals.slice(0, pointCount).flatMap((v) => [v.x, v.y, v.z, 0.0]),
+      ...frames.binormals.slice(0, pointCount).flatMap((v) => [v.x, v.y, v.z, 0.0]),
     ])
-    const tex = new THREE.DataTexture(textureArray, pointCount, 3, THREE.RGBAFormat, THREE.FloatType)
-    tex.needsUpdate = true
-    return tex
-  }, [curve, pointCount])
+    return new THREE.DataTexture(dataArray, pointCount, 4, THREE.RGBAFormat, THREE.FloatType)
+  }, [curve])
+
+  dataTexture.wrapS = THREE.RepeatWrapping
+  dataTexture.wrapY = THREE.RepeatWrapping
+  dataTexture.magFilter = THREE.LinearFilter
+  dataTexture.needsUpdate = true
 
   const uniforms = useRef({
-    dataTexture: { value: texture },
+    dataTexture: { value: dataTexture },
     pointCount: { value: pointCount },
     curveLength: { value: curve.getLength() },
     time: { value: 0 },
   }).current
 
   useEffect(() => {
-    uniforms.dataTexture.value = texture
+    uniforms.dataTexture.value = dataTexture
     uniforms.curveLength.value = curve.getLength()
-  }, [uniforms, texture, curve])
+  }, [uniforms, curve, dataTexture])
 
   const spring = useSpringValue(0, {
     config: { mass: 1, tension: 170, friction: 20 },
     onChange: (result) => (uniforms.time.value = result),
   })
 
+  const handleWheel = (e) => {
+    scroll.current += e.deltaY / 4
+    spring.start(scroll.current)
+  }
+
   return (
     <group position={position}>
-      <Window
-        width={width}
-        height={height}
-        onWheel={(e) => {
-          const newScrollValue = scroll.current + e.deltaY / 4
-          scroll.current = newScrollValue
-          spring.start(newScrollValue)
-        }}
-      />
-      {/* <Line points={curve.getSpacedPoints(pointCount)} color="yellow" lineWidth={1} />
+      <Window width={width} height={height} onWheel={handleWheel} />
+      {children.map((child, i) =>
+        cloneElement(child, {
+          key: i,
+          uniforms,
+          spring,
+          width: width - 20,
+          windowHeight: height,
+          zPosition: -i * (child.props.height * 1.1),
+          color: hsl(220, 100, 50),
+          curve,
+        })
+      )}
+    </group>
+  )
+}
+
+{
+  /* <Line points={curve.getSpacedPoints(pointCount)} color="yellow" lineWidth={1} />
       {curve.getSpacedPoints(pointCount).map((point, index) => (
         <mesh key={index} position={[point.x, point.y, point.z]}>
           <sphereGeometry args={[2, 16, 16]} />
           <meshBasicMaterial color="red" />
         </mesh>
-      ))} */}
-      {children.map((child, i) =>
-        cloneElement(child, {
-          uniforms: uniforms,
-          spring: spring,
-          width: width - 20,
-          windowHeight: height,
-          zPosition: -i * (child.props.height * 1.1),
-          color: hsl(220, 100, 50),
-          curve: curve,
-        })
-      )}
-    </group>
-  )
+      ))} */
 }
 
 function createCapsuleCurve(radius, height) {

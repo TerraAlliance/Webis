@@ -1,20 +1,26 @@
-import { ScrollingDiv2 } from "../3dgui/ScrollingDiv2"
-import { ScrollingWindow2 } from "../3dgui/ScrollingWindow2"
+import { ScrollingDiv } from "../3dgui/ScrollingDiv"
+import { ScrollingWindow } from "../3dgui/ScrollingWindow"
 // import { app } from "./state"
 
 export function Diagram({ position, width, height }) {
   return (
     <group position={position}>
-      <ScrollingWindow2 width={width} height={height}>
-        <ScrollingDiv2 height={80} text={"<div>\n</div>"} />
-        <ScrollingDiv2 height={80} text={"<div>\n</div>"} />
-        <ScrollingDiv2 height={80} text={"<div>\n</div>"} />
-        <ScrollingDiv2 height={80} text={"<div>\n</div>"} />
-        <ScrollingDiv2 height={80} text={"<div>\n</div>"} />
-        <ScrollingDiv2 height={80} text={"<div>\n</div>"} />
-        <ScrollingDiv2 height={80} text={"<div>\n</div>"} />
-        <ScrollingDiv2 height={80} text={"<div>\n</div>"} />
-      </ScrollingWindow2>
+      <ScrollingWindow width={width} height={height}>
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
+      </ScrollingWindow>
     </group>
   )
 }
