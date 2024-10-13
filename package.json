@@ -24,7 +24,8 @@
     "react-dom": "^18.3.1",
     "three": "^0.168.0",
     "three-custom-shader-material": "^6.0.3",
-    "use-sound": "^4.0.3"
+    "use-sound": "^4.0.3",
+    "wobble": "^1.5.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",

@@ -27,13 +27,16 @@ export function Blob({ position, scale }) {
         uniforms={{
           u_time: { value: 0 },
           u_intensity: { value: 1 },
-          u_color1: { value: new Color("hsl(240, 100%, 60%)") },
-          u_color2: { value: new Color("hsl(0, 100%, 90%)") },
+          u_color1: { value: new Color("blue") },
+          u_color2: { value: new Color("navy") },
         }}
       />
     </mesh>
   )
 }
+
+// u_color1: { value: new Color("hsl(240, 100%, 60%)") },
+// u_color2: { value: new Color("hsl(0, 100%, 90%)") },
 
 const vertexShader = `
 uniform float u_intensity;

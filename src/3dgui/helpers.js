@@ -23,3 +23,7 @@ export function roundedbox(width, height, depth, radius0, steps, smoothness = 2)
 
   return geometry
 }
+
+export function hsl(hue, saturation, lightness) {
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`
+}

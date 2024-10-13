@@ -6,7 +6,7 @@ export function Display({ position, width, height }) {
     <group position={position}>
       <Window width={width} height={height} />
       <Html
-        position={[0, 0, 11]}
+        position={[0, 0, 25.5]}
         distanceFactor={200}
         transform={true}
         occlude={true}

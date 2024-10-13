@@ -1,39 +1,27 @@
-// import { cloneElement } from "react"
-// import { Switch } from "@legendapp/state/react"
-// import { Text } from "@react-three/drei"
-
-import { Window } from "../3dgui/Window"
-import { ScrollingDiv } from "../3dgui/ScrollingDiv"
-import { app } from "./state"
+import { ScrollingDiv2 } from "../3dgui/ScrollingDiv2"
+import { ScrollingWindow2 } from "../3dgui/ScrollingWindow2"
+// import { app } from "./state"
 
 export function Diagram({ position, width, height }) {
   return (
     <group position={position}>
-      <Window width={width} height={height} />
-      {/* <Elements width={width} height={height} /> */}
-      <ScrollingDiv time={-0.2} width={700} height={70} />
-      <ScrollingDiv time={-0.5} width={700} height={70} />
-      <ScrollingDiv time={-1} width={700} height={70} />
-      <ScrollingDiv time={-1.5} width={700} height={70} />
-      <ScrollingDiv time={-2} width={700} height={70} />
-      <ScrollingDiv time={-2.5} width={700} height={70} />
-      <ScrollingDiv time={-3} width={700} height={70} />
-      <ScrollingDiv time={-3.5} width={700} height={70} />
-      {/* <ScrollingDiv time={-4} width={700} height={70} />
-      <ScrollingDiv time={-4.5} width={700} height={70} />
-      <ScrollingDiv time={-5} width={700} height={70} />
-      <ScrollingDiv time={-5.5} width={700} height={70} />
-      <ScrollingDiv time={-6} width={700} height={70} />
-      <ScrollingDiv time={-6.5} width={700} height={70} />
-      <ScrollingDiv time={-7} width={700} height={70} />
-      <ScrollingDiv time={-7.5} width={700} height={70} />
-      <ScrollingDiv time={-8} width={700} height={70} />
-      <ScrollingDiv time={-8.5} width={700} height={70} />
-      <ScrollingDiv time={-9} width={700} height={70} />
-      <ScrollingDiv time={-9.5} width={700} height={70} /> */}
+      <ScrollingWindow2 width={width} height={height}>
+        <ScrollingDiv2 height={80} text={"<div>\n</div>"} />
+        <ScrollingDiv2 height={80} text={"<div>\n</div>"} />
+        <ScrollingDiv2 height={80} text={"<div>\n</div>"} />
+        <ScrollingDiv2 height={80} text={"<div>\n</div>"} />
+        <ScrollingDiv2 height={80} text={"<div>\n</div>"} />
+        <ScrollingDiv2 height={80} text={"<div>\n</div>"} />
+        <ScrollingDiv2 height={80} text={"<div>\n</div>"} />
+        <ScrollingDiv2 height={80} text={"<div>\n</div>"} />
+      </ScrollingWindow2>
     </group>
   )
 }
+
+// import { cloneElement } from "react"
+// import { Switch } from "@legendapp/state/react"
+// import { Text } from "@react-three/drei"
 
 // function Elements({ width, height }) {
 //   console.log(renderElements(app.elements.get(), 0))

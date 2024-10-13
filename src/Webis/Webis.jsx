@@ -17,6 +17,3 @@ export function Webis() {
   )
 }
 
-function hsl(hue, saturation, lightness) {
-  return `hsl(${hue}, ${saturation}%, ${lightness}%)`
-}

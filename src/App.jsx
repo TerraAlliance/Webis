@@ -9,11 +9,10 @@ export default function App() {
     <div style={{ position: "absolute", width: "100%", height: "100%", background: "black" }}>
       <Canvas>
         <Stats />
-        <OrbitControls enabled={true} />
+        <OrbitControls enabled={true} enableZoom={false} />
         <OrthographicCamera makeDefault position={[0, 0, 5000]} far={10000} />
-        <pointLight position={[0, 5000, 10000]} intensity={5} decay={0} />
-        <directionalLight position={[0, 0, 1]} intensity={1} />
-        <directionalLight position={[0, 0, -1]} intensity={1} />
+        <directionalLight position={[0, 0, 1]} intensity={4} />
+        <directionalLight position={[0, 0, -1]} intensity={4} />
         <Webis />
         <Blob position={[0, 0, -3000]} scale={500} />
       </Canvas>

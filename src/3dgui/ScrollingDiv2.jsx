@@ -8,7 +8,7 @@ import { Text } from "@react-three/drei"
 
 import { roundedbox } from "./helpers"
 
-export function ScrollingDiv({ width, height, zPosition, uniforms, spring, windowHeight, color, curve, text }) {
+export function ScrollingDiv2({ width, height, zPosition, uniforms, spring, windowHeight, color, curve, text }) {
   const [hovered, setHover] = useState(false)
 
   return (
@@ -28,13 +28,13 @@ export function ScrollingDiv({ width, height, zPosition, uniforms, spring, windo
           }}
         />
       </mesh>
-      <Text position={[0, 0, 0]} text={text} fontSize={20} color={"white"}>
+      <Text scale={[1, 1.008, 1.2]} position={[0, 0, 0]} text={text} fontSize={20} color={"white"}>
         <CustomShaderMaterial
           baseMaterial={MeshBasicMaterial}
           vertexShader={vertexShader}
           uniforms={{
             ...uniforms,
-            offset: { value: new Vector3(0, 8, zPosition) },
+            offset: { value: new Vector3(0, 0, zPosition) },
             uRotation: { value: new Matrix4().makeRotationFromEuler(new Euler(-Math.PI / 2, 0, -Math.PI)) },
           }}
         />
@@ -50,13 +50,12 @@ function GhostBox({ width, height, spring, zPosition, setHover, curve }) {
     <>
       <animated.mesh
         ref={mesh}
-        visible={false}
+        visible={true}
         position={spring.to((v) => {
           const value = (zPosition + v) / curve.getLength()
           const t = value - Math.floor(value)
           return [...curve.getPointAt(t)]
         })}
-        // position-y={spring.to((val) => zPosition + val + (windowHeight - 50) / 2)}
         // position-z={20}
         onPointerOver={() => setHover(true)}
         onPointerOut={() => setHover(false)}
@@ -76,31 +75,18 @@ const vertexShader = `
   uniform mat4 uRotation;
   uniform vec3 offset;
 
-  struct splineData { vec3 point, binormal, normal; };
-
-  splineData getSplineData(float t) {
-    float step = 1.0 / 3.0;
-    return splineData(
-      texture2D(dataTexture, vec2(t, step * 0.5)).rgb,
-      texture2D(dataTexture, vec2(t, step * 1.5)).rgb,
-      texture2D(dataTexture, vec2(t, step * 2.5)).rgb
-    );
-  }
-
   void main() {
     vec3 pos = position;
     pos = (uRotation * vec4(pos, 1.0)).xyz;
     float t = fract((time + offset.z) / curveLength + pos.z / curveLength);
-    float wStep = 1.0 / pointCount;
-    float tPrev = floor(t / wStep) * wStep + wStep * 0.5;
-    splineData splinePrev = getSplineData(tPrev);
-    splineData splineNext = getSplineData(tPrev + wStep);
 
-    vec3 P = mix(splinePrev.point, splineNext.point, fract(t / wStep));
-    vec3 B = mix(splinePrev.binormal, splineNext.binormal, fract(t / wStep));
-    vec3 N = mix(splinePrev.normal, splineNext.normal, fract(t / wStep));
+    vec3 point = texture2D(dataTexture, vec2(t, (0.5) / 4.)).xyz;
+    vec3 a = texture2D(dataTexture, vec2(0.0, (1. + 0.5) / 4.)).xyz;
+    vec3 b = texture2D(dataTexture, vec2(0.0, (2. + 0.5) / 4.)).xyz;
+    vec3 c = texture2D(dataTexture, vec2(0.0, (3. + 0.5) / 4.)).xyz;
+    mat3 basis = mat3(a, b, c);
 
-    csm_Position = P + (N * (pos.x + offset.x)) + (B * (pos.y + offset.y));
-    csm_Normal = B;
+    csm_Position = point + (b * pos.x) + (c * (pos.y));
+    csm_Normal = c;
   }
 `
