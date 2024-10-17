@@ -7,16 +7,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Webis</title>
 
+  <script>
+    document.addEventListener("contextmenu", (event) => event.preventDefault())
+  </script>
+
   <style>
     body {
       margin: 0;
     }
+
+    /* #gradient-canvas {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      --gradient-color-1: #043D5D;
+      --gradient-color-2: #032E46;
+      --gradient-color-3: #23B684;
+      --gradient-color-4: #0F595E;
+    } */
+
+    #gradient-canvas {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      --gradient-color-1: #00a2ff;
+      --gradient-color-2: #00a6ff;
+      --gradient-color-3: #00ffaa;
+      --gradient-color-4: #00eeff;
+    }
+
+    /* #gradient-canvas {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      --gradient-color-1: #0044ff;
+      --gradient-color-2: #00a6ff;
+      --gradient-color-3: #00ffaa;
+      --gradient-color-4: #00eeff;
+    } */
   </style>
 
 </head>
 
 <body>
+  <canvas id="gradient-canvas" data-transition-in></canvas>
   <div id="root"></div>
+
   <script type="module" src="/src/main.jsx"></script>
 </body>
 

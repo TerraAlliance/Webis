@@ -1,4 +1,8 @@
-import { Shape, ExtrudeGeometry } from "three"
+import { Shape, ExtrudeGeometry, DataTexture, RepeatWrapping, LinearFilter, RGBAFormat, FloatType } from "three"
+
+export function hsl(hue, saturation, lightness) {
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`
+}
 
 export function roundedbox(width, height, depth, radius0, steps, smoothness = 2) {
   let shape = new Shape()
@@ -24,6 +28,19 @@ export function roundedbox(width, height, depth, radius0, steps, smoothness = 2)
   return geometry
 }
 
-export function hsl(hue, saturation, lightness) {
-  return `hsl(${hue}, ${saturation}%, ${lightness}%)`
+export function dataTexture(curve, pointCount) {
+  const points = curve.getSpacedPoints(pointCount)
+  const frames = curve.computeFrenetFrames(pointCount, true)
+  const dataArray = new Float32Array([
+    ...points.slice(0, pointCount).flatMap((v) => [v.x, v.y, v.z, 0.0]),
+    ...frames.tangents.slice(0, pointCount).flatMap((v) => [v.x, v.y, v.z, 0.0]),
+    ...frames.normals.slice(0, pointCount).flatMap((v) => [v.x, v.y, v.z, 0.0]),
+    ...frames.binormals.slice(0, pointCount).flatMap((v) => [v.x, v.y, v.z, 0.0]),
+  ])
+  const texture = new DataTexture(dataArray, pointCount, 4, RGBAFormat, FloatType)
+  texture.wrapS = RepeatWrapping
+  texture.wrapY = RepeatWrapping
+  texture.magFilter = LinearFilter
+  texture.needsUpdate = true
+  return texture
 }

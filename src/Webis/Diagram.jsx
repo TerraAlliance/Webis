@@ -6,20 +6,23 @@ export function Diagram({ position, width, height }) {
   return (
     <group position={position}>
       <ScrollingWindow width={width} height={height}>
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} />
+        <ScrollingDiv height={180} text={"<div>\n\n\n\n\n</div>"} alignment={"left"}>
+          <ScrollingDiv height={45} text={"<p></p>"} alignment={"center"} />
+          <ScrollingDiv height={45} text={"<p></p>"} alignment={"center"} />
+        </ScrollingDiv>
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
+        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
       </ScrollingWindow>
     </group>
   )
