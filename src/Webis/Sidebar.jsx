@@ -1,5 +1,6 @@
 import { ScrollingWindow } from "../3dgui/ScrollingWindow"
 import { ScrollingDiv } from "../3dgui/ScrollingDiv"
+import { ScrollingText } from "../3dgui/ScrollingText"
 
 const elementArray = [
   "Division",
@@ -50,7 +51,9 @@ export function Sidebar({ position, width, height }) {
     <group position={position}>
       <ScrollingWindow width={width} height={height}>
         {elementArray.map((element, i) => (
-          <ScrollingDiv key={i} height={30} text={element} alignment={"center"} />
+          <ScrollingDiv key={i} height={30}>
+            <ScrollingText text={element} fontSize={20}  />
+          </ScrollingDiv>
         ))}
       </ScrollingWindow>
     </group>

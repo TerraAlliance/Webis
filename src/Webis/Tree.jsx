@@ -1,28 +1,32 @@
 import { ScrollingDiv } from "../3dgui/ScrollingDiv"
 import { ScrollingWindow } from "../3dgui/ScrollingWindow"
+import { ScrollingText } from "../3dgui/ScrollingText"
 // import { app } from "./state"
 
-export function Diagram({ position, width, height }) {
+export function Tree({ position, width, height }) {
   return (
     <group position={position}>
       <ScrollingWindow width={width} height={height}>
-        <ScrollingDiv height={180} text={"<div>\n\n\n\n\n</div>"} alignment={"left"}>
-          <ScrollingDiv height={45} text={"<p></p>"} alignment={"center"} />
-          <ScrollingDiv height={45} text={"<p></p>"} alignment={"center"} />
+        <ScrollingDiv height={180} alignment={"left"}>
+          <ScrollingText text={"<div>"} fontSize={20} location={"topLeft"} anchorX={"left"} />
+          <ScrollingText text={"</div>"} fontSize={20} location={"bottomLeft"} anchorX={"left"} />
         </ScrollingDiv>
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
-        <ScrollingDiv height={90} text={"<div>\n\n</div>"} alignment={"left"} />
+        <ScrollingDiv height={40} alignment={"left"}>
+          <ScrollingText text={"<p>"} fontSize={20} location={"left"} anchorX={"left"} />
+          <ScrollingText text={"</p>"} fontSize={20} location={"right"} anchorX={"right"} />
+        </ScrollingDiv>
+        <ScrollingDiv height={40} alignment={"left"}>
+          <ScrollingText text={"<p>"} fontSize={20} location={"left"} anchorX={"left"} />
+          <ScrollingText text={"</p>"} fontSize={20} location={"right"} anchorX={"right"} />
+        </ScrollingDiv>
+        <ScrollingDiv height={40} alignment={"left"}>
+          <ScrollingText text={"<p>"} fontSize={20} location={"left"} anchorX={"left"} />
+          <ScrollingText text={"</p>"} fontSize={20} location={"right"} anchorX={"right"} />
+        </ScrollingDiv>
+        <ScrollingDiv height={40} alignment={"left"}>
+          <ScrollingText text={"<p>"} fontSize={20} location={"left"} anchorX={"left"} />
+          <ScrollingText text={"</p>"} fontSize={20} location={"right"} anchorX={"right"} />
+        </ScrollingDiv>
       </ScrollingWindow>
     </group>
   )

@@ -44,3 +44,27 @@ export function dataTexture(curve, pointCount) {
   texture.needsUpdate = true
   return texture
 }
+
+export const flowShader = `
+  uniform sampler2D data;
+  uniform float pointCount;
+  uniform float time;
+  uniform float curveLength;
+  uniform mat4 uRotation;
+  uniform vec3 offset;
+
+  void main() {
+    vec3 pos = (uRotation * vec4(position, 1.0)).xyz;
+    pos += offset;
+    float t = fract(time / curveLength + pos.z / curveLength);
+
+    vec3 point = texture2D(data, vec2(t, (0.5) / 4.)).xyz;
+    vec3 a = texture2D(data, vec2(t, (1. + 0.5) / 4.)).xyz;
+    vec3 b = texture2D(data, vec2(t, (2. + 0.5) / 4.)).xyz;
+    vec3 c = texture2D(data, vec2(t, (3. + 0.5) / 4.)).xyz;
+    // mat3 basis = mat3(a, b, c);
+
+    csm_Position = point + (b * pos.x) + (c * (pos.y));
+    csm_Normal = c;
+  }
+`
