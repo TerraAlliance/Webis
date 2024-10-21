@@ -2,9 +2,10 @@ import { MeshBasicMaterial, Vector3, Matrix4, Euler } from "three"
 
 import CustomShaderMaterial from "three-custom-shader-material"
 import { Text } from "@react-three/drei"
+// import { Text } from "./Text"
 import { flowShader } from "./helpers"
 
-export function ScrollingText({ width, height, yPosition, zPosition, uniforms, curve, ...props }) {
+export function ScrollingText({ y, z, width, height, uniforms, fontSize = 20, color, location, ...props }) {
   const left = -width / 2 + 5
   const right = width / 2 - 5
   const top = height / 2 - 15
@@ -21,19 +22,19 @@ export function ScrollingText({ width, height, yPosition, zPosition, uniforms, c
     bottomRight: [right, bottom],
   }
 
-  const [xPos, yPos] = locationMap[props?.location] || [0, 0]
+  const [xPos, yPos] = locationMap[location] || [0, 0]
 
   return (
-    <Text position-x={xPos} anchorX={props?.anchorX} {...props}>
+    <Text position-x={xPos} fontSize={fontSize} color={color} yPos={yPos} location={location} {...props}>
       <CustomShaderMaterial
         baseMaterial={MeshBasicMaterial}
         vertexShader={flowShader}
         uniforms={{
           ...uniforms,
-          curveLength: { value: curve.getLength() },
-          offset: { value: new Vector3(0, yPosition, zPosition + yPos) },
+          offset: { value: new Vector3(0, z, y + yPos) },
           uRotation: { value: new Matrix4().makeRotationFromEuler(new Euler(-Math.PI / 2, 0, -Math.PI)) },
         }}
+        key={[location, yPos, y]}
       />
     </Text>
   )

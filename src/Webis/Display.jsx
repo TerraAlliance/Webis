@@ -1,35 +1,55 @@
+import { createElement } from "react"
 import { Html } from "@react-three/drei"
 import { Window } from "../3dgui/Window"
+import { app } from "./state"
+
+const renderElements = (elements) => {
+  return elements.map((element, i) => {
+    const { component, props, children } = element
+    return createElement(component, { ...props, key: i }, Array.isArray(children) ? renderElements(children) : children)
+  })
+}
+
+import { useEffect, useRef } from "react"
 
 export function Display({ position, width, height }) {
+  const elements = app.elements.get()
+  const container = useRef(null)
+
+  useEffect(() => {
+    if (container.current) {
+      container.current.scrollTop = container.current.scrollHeight
+    }
+  }, [elements])
+
   return (
     <group position={position}>
       <Window width={width} height={height} />
       <Html
         position={[0, 0, 25.5]}
-        distanceFactor={200}
+        distanceFactor={400}
         transform={true}
         occlude={true}
-        pointerEvents="none"
-        style={{ width: width * 2 - 40 + "px", height: height * 2 - 40 + "px", backgroundColor: "white" }}
+        style={{
+          width: width - 40 + "px",
+          height: height - 40 + "px",
+          backgroundColor: "white",
+          userSelect: "none",
+          overflowY: "hidden",
+          borderRadius: "10px",
+        }}
       >
-        <Element />
-        <span style={{ fontSize: "100px", pointerEvents: "auto" }}>Text </span>
-        <span style={{ fontSize: "100px", pointerEvents: "auto" }}>Text </span>
-        <span style={{ fontSize: "100px", pointerEvents: "auto" }}>Text </span>
-        <div style={{ width: "200px", height: "200px", background: "blue" }} />
-        <div style={{ width: "200px", height: "200px", background: "red" }} />
-        <div style={{ width: "200px", height: "200px", background: "green" }} />
-        <div style={{ width: "200px", height: "200px", background: "yellow" }} />
+        <div
+          ref={container}
+          style={{
+            width: "100%",
+            height: "100%",
+            overflowY: "scroll",
+          }}
+        >
+          {renderElements(elements)}
+        </div>
       </Html>
     </group>
-  )
-}
-
-function Element() {
-  return (
-    <>
-      <span style={{ fontSize: "100px" }}>Text </span>
-    </>
   )
 }

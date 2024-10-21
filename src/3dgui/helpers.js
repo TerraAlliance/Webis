@@ -1,3 +1,4 @@
+import { Children } from "react"
 import { Shape, ExtrudeGeometry, DataTexture, RepeatWrapping, LinearFilter, RGBAFormat, FloatType } from "three"
 
 export function hsl(hue, saturation, lightness) {
@@ -56,15 +57,28 @@ export const flowShader = `
   void main() {
     vec3 pos = (uRotation * vec4(position, 1.0)).xyz;
     pos += offset;
-    float t = fract(time / curveLength + pos.z / curveLength);
+    float t = (time + pos.z) / curveLength;
+
+    float min = -0.5;
+    float max = 0.05;
+    t = clamp(t, min, max);
 
     vec3 point = texture2D(data, vec2(t, (0.5) / 4.)).xyz;
-    vec3 a = texture2D(data, vec2(t, (1. + 0.5) / 4.)).xyz;
-    vec3 b = texture2D(data, vec2(t, (2. + 0.5) / 4.)).xyz;
-    vec3 c = texture2D(data, vec2(t, (3. + 0.5) / 4.)).xyz;
-    // mat3 basis = mat3(a, b, c);
-
-    csm_Position = point + (b * pos.x) + (c * (pos.y));
-    csm_Normal = c;
+      vec3 a = texture2D(data, vec2(t, (1. + 0.5) / 4.)).xyz;
+      vec3 b = texture2D(data, vec2(t, (2. + 0.5) / 4.)).xyz;
+      vec3 c = texture2D(data, vec2(t, (3. + 0.5) / 4.)).xyz;
+      
+      csm_Position = point + (b * pos.x) + (c * pos.y);
+      csm_Normal = c;
   }
 `
+
+export function countChildrenOfType(children, type) {
+  return Children.toArray(children).filter((child) => child.type.name === type).length
+}
+
+export function filterChildrenByType(children, type) {
+  return Children.toArray(children).filter((child) => {
+    return child.type.name === type
+  })
+}

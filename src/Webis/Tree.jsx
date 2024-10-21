@@ -1,103 +1,63 @@
+import { useMemo } from "react"
+import { observer } from "@legendapp/state/react"
+
 import { ScrollingDiv } from "../3dgui/ScrollingDiv"
 import { ScrollingWindow } from "../3dgui/ScrollingWindow"
-import { ScrollingText } from "../3dgui/ScrollingText"
-// import { app } from "./state"
+import { ScrollingTag } from "../3dgui/ScrollingTag"
+import { app } from "./state"
 
-export function Tree({ position, width, height }) {
+export const Tree = observer(function Component({ position, width, height }) {
+  const elements = app.elements.get()
+
+  const components = elements && renderComponents(elements)
+
   return (
     <group position={position}>
       <ScrollingWindow width={width} height={height}>
-        <ScrollingDiv height={180} alignment={"left"}>
-          <ScrollingText text={"<div>"} fontSize={20} location={"topLeft"} anchorX={"left"} />
-          <ScrollingText text={"</div>"} fontSize={20} location={"bottomLeft"} anchorX={"left"} />
-        </ScrollingDiv>
-        <ScrollingDiv height={40} alignment={"left"}>
-          <ScrollingText text={"<p>"} fontSize={20} location={"left"} anchorX={"left"} />
-          <ScrollingText text={"</p>"} fontSize={20} location={"right"} anchorX={"right"} />
-        </ScrollingDiv>
-        <ScrollingDiv height={40} alignment={"left"}>
-          <ScrollingText text={"<p>"} fontSize={20} location={"left"} anchorX={"left"} />
-          <ScrollingText text={"</p>"} fontSize={20} location={"right"} anchorX={"right"} />
-        </ScrollingDiv>
-        <ScrollingDiv height={40} alignment={"left"}>
-          <ScrollingText text={"<p>"} fontSize={20} location={"left"} anchorX={"left"} />
-          <ScrollingText text={"</p>"} fontSize={20} location={"right"} anchorX={"right"} />
-        </ScrollingDiv>
-        <ScrollingDiv height={40} alignment={"left"}>
-          <ScrollingText text={"<p>"} fontSize={20} location={"left"} anchorX={"left"} />
-          <ScrollingText text={"</p>"} fontSize={20} location={"right"} anchorX={"right"} />
-        </ScrollingDiv>
+        {components}
       </ScrollingWindow>
     </group>
   )
+})
+
+const spacing = 5
+const height = 30
+
+const renderComponents = (tree, parentY) => {
+  let acc = 0
+
+  return tree.map((element, i) => {
+    const { component, id, children } = element
+
+    const y = acc - (height + spacing) / 2
+    acc -= height + spacing
+
+    const totalChildren = Array.isArray(children) ? countChildren(children) : 0
+    const maxDepth = Array.isArray(children) ? countMaxDepth(children) : 0
+    const childHeight = totalChildren > 0 ? totalChildren * (height + spacing) + maxDepth * height * 2 : height
+
+    const components = Array.isArray(children) ? renderComponents(children, y) : []
+
+    return (
+      <ScrollingDiv
+        key={id}
+        y={parentY ? parentY : y}
+        height={childHeight}
+        spacing={spacing}
+        selected={app.selected.get() === id}
+        onClick={(e) => (e.stopPropagation(), app.selected.set(id))}
+      >
+        <ScrollingTag tag={component} />
+        {...components}
+      </ScrollingDiv>
+    )
+  })
 }
 
-// import { cloneElement } from "react"
-// import { Switch } from "@legendapp/state/react"
-// import { Text } from "@react-three/drei"
+const countChildren = (children) => children.reduce((count, child) => count + 1 + (Array.isArray(child.children) ? countChildren(child.children) : 0), 0)
 
-// function Elements({ width, height }) {
-//   console.log(renderElements(app.elements.get(), 0))
-//   return (
-//     <>
-//       <Element type={"Body"} width={width - 20} height={height - 20}>
-//         {renderElements(app.elements.get(), 0)}
-//       </Element>
-//     </>
-//   )
-// }
-
-// const componentMap = { Element: Element }
-
-// const renderElements = (elements) => {
-//   return Object.entries(elements).map(([key, value]) => {
-//     const { component: componentName, children, ...props } = value
-//     const Component = componentMap[componentName]
-
-//     const childElements = children ? renderElements(children) : null
-
-//     return (
-//       <Component key={key} {...props}>
-//         {childElements}
-//       </Component>
-//     )
-//   })
-// }
-
-// function Element({ position, type, width, height, children, lightness = 90 }) {
-//   return (
-//     <group position={position}>
-//       <group position={[0, 0, 20]}>
-//         <StartTag position={[-width / 2 + 45, height / 2 - 15, 11]} type={type} />
-//         <Switch value={type}>
-//           {{
-//             Body: () => <EndTag position={[-width / 2 + 45, -height / 2 + 15, 11]} type={type} />,
-//             Span: () => <EndTag position={[width / 2 - 45, height / 2 - 15, 11]} type={type} />,
-//             default: () => <EndTag position={[-width / 2 + 45, -height / 2 + 15, 11]} type={type} />,
-//           }}
-//         </Switch>
-//         <Window width={width} height={height} lightness={lightness} selectable={true} />
-//       </group>
-//       <group position={[0, 0, 20]}>
-//         {children &&
-//           children.map((child, i) =>
-//             cloneElement(child, {
-//               key: i,
-//               lightness: lightness - 5,
-//               width: width - 50,
-//               height: height / children.length - 40,
-//               position: [0, height / 2 - height / children.length / 2 - (height / children.length) * i, 0],
-//             })
-//           )}
-//       </group>
-//     </group>
-//   )
-// }
-
-// function StartTag({ position, type }) {
-//   return <Text position={position} text={`<${type}>`} color={"white"} fontSize={20} />
-// }
-
-// function EndTag({ position, type }) {
-//   return <Text position={position} text={`</${type}>`} color={"white"} fontSize={20} />
-// }
+const countMaxDepth = (children, depth = 1) =>
+  children.reduce(
+    (maxDepth, child) => (Array.isArray(child.children) && child.children.length > 0 ? Math.max(maxDepth, countMaxDepth(child.children, depth + 1)) : maxDepth),
+    depth
+  )

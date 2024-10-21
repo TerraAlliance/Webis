@@ -8,6 +8,10 @@ import { Sidebar } from "./Sidebar"
 export function Webis() {
   const size = useWindowSize()
 
+  if (size.height === null) {
+    return null
+  }
+
   return (
     <Flexbox position={[0, 20, 0]} width={size.width} height={size.height - 40} spacing={20}>
       <Display grow={4} />
@@ -16,4 +20,3 @@ export function Webis() {
     </Flexbox>
   )
 }
-

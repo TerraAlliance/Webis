@@ -1,73 +1,88 @@
 import { useState, cloneElement } from "react"
 import { MeshBasicMaterial, Vector3, Matrix4, Euler } from "three"
 import { animated } from "@react-spring/three"
-
+import { Switch, Show } from "@legendapp/state/react"
+import { RoundedBox } from "@react-three/drei"
 import CustomShaderMaterial from "three-custom-shader-material"
-import { roundedbox, flowShader } from "./helpers"
 
-export function ScrollingDiv({ width, height, yPosition, zPosition, uniforms, spring, color, curve, children }) {
-  let accumulator = 0
+import { flowShader, hsl, filterChildrenByType } from "./helpers"
+
+const AnimatedShow = animated(Show)
+
+export function ScrollingDiv({ y, z, width, height, uniforms, spring, curve, children, spacing, level = 0, selected, ...props }) {
+  let acc = 0
+  const divChildren = filterChildrenByType(children, "ScrollingDiv")
+  const totalHeight = divChildren.reduce((a, v) => a + v.props.height + spacing, 0)
+  const singleLine = divChildren.length > 0 ? false : true
+
   return (
-    <>
-      <Div zPosition={zPosition} yPosition={yPosition} width={width} height={height} spring={spring} curve={curve} color={color} uniforms={uniforms} />
+    <AnimatedShow
+      if={spring.to((v) => {
+        const value = (y + v) / curve.getLength()
+        return value < 0.05 + height / curve.getLength() / 2 && value > -0.5 - height / curve.getLength()
+      })}
+    >
+      <Div y={y} z={z} width={width} height={height} spring={spring} curve={curve} level={level} uniforms={uniforms} selected={selected} {...props} />
       {children &&
         (Array.isArray(children) ? children : [children]).map((child, i) => {
-          const childHeight = child.props.height || 0
-          const z = -accumulator - childHeight / 2
-          accumulator += childHeight
-          return cloneElement(child, {
-            key: i,
-            uniforms: uniforms,
-            spring,
-            width: width,
-            height: height,
-            windowHeight: height,
-            yPosition: 1,
-            zPosition: zPosition + z,
-            curve: curve,
-          })
+          return (
+            <Switch key={i} value={child.type.name}>
+              {{
+                ScrollingDiv: () => {
+                  const yOffset = -acc + totalHeight / 2 - (child.props.height + spacing) / 2
+                  acc += child.props.height + spacing
+                  const childY = divChildren.length > 1 ? y + yOffset : y
+                  return cloneElement(child, {
+                    y: childY,
+                    z: z + 1,
+                    uniforms: uniforms,
+                    spring: spring,
+                    width: width - 20,
+                    curve: curve,
+                    level: level + 1,
+                  })
+                },
+                ScrollingText: () => cloneElement(child, { y: y, z: z + 1, width: width, height: height, uniforms: uniforms, curve: curve }),
+                ScrollingTag: () =>
+                  cloneElement(child, { y: y, z: z + 1, width: width, height: height, uniforms: uniforms, singleLine: singleLine, curve: curve }),
+              }}
+            </Switch>
+          )
         })}
-    </>
+    </AnimatedShow>
   )
 }
 
-function Div({ width, height, spring, zPosition, yPosition, curve, color, uniforms }) {
+function Div({ width, height, spring, y, z, curve, level, uniforms, selected, ...props }) {
   const [hovered, setHover] = useState(false)
 
   return (
     <>
-      <mesh geometry={roundedbox(width, 8, height, 4, Math.ceil(height / 10))}>
+      <RoundedBox args={[width, 8, height]} radius={4} smoothness={1} steps={Math.ceil(height / 10)} bevelSegments={1}>
         <CustomShaderMaterial
           baseMaterial={MeshBasicMaterial}
           transparent={true}
-          opacity={hovered ? 0.5 : 0.2}
+          opacity={hovered || selected ? 0.4 : 0.2}
           vertexShader={flowShader}
-          color={hovered ? "red" : color}
-          wireframe={false}
+          color={hovered || selected ? "red" : hsl(220 + level * 30, 100, 50)}
           uniforms={{
             ...uniforms,
-            curveLength: { value: curve.getLength() },
-            offset: { value: new Vector3(0, yPosition - 8, zPosition) },
+            offset: { value: new Vector3(0, z - 6, y) },
             uRotation: { value: new Matrix4().makeRotationFromEuler(new Euler(0, 0, 0)) },
           }}
         />
-      </mesh>
+      </RoundedBox>
       <animated.mesh
         visible={false}
         position={spring.to((v) => {
-          const value = (zPosition + v) / curve.getLength()
+          const value = (y + v) / curve.getLength()
           const t = value - Math.floor(value)
           const point = curve.getPointAt(t)
-          return [point.x, point.y, point.z + yPosition]
+          return [point.x, point.y, point.z + z]
         })}
-        onPointerOver={(e) => {
-          e.stopPropagation()
-          setHover(true)
-        }}
-        onPointerOut={(e) => {
-          e.stopPropagation()
-          setHover(false)
-        }}
+        onPointerOver={(e) => (e.stopPropagation(), setHover(true))}
+        onPointerOut={(e) => (e.stopPropagation(), setHover(false))}
+        {...props}
       >
         <planeGeometry args={[width, height]} />
         <meshBasicMaterial color={"hotpink"} />
