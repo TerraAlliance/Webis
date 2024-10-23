@@ -24,13 +24,13 @@ export function ScrollDiv({ y, z, width, height, uniforms, spring, curve, childr
     >
       <Div y={y} z={z} width={width} height={height} spring={spring} curve={curve} level={level} uniforms={uniforms} selected={selected} hue={hue} {...props} />
       {Children.map(Children.toArray(children), (child, i) => {
+        const yOffset = -acc + totalHeight / 2 - (child.props.height + spacing) / 2
+        if (child.type.displayName === "ScrollDiv") acc += child.props.height + spacing
+        const childY = divChildren.length > 1 ? y + yOffset : y
         return (
           <Switch key={i} value={child.type.displayName}>
             {{
               ScrollDiv: () => {
-                const yOffset = -acc + totalHeight / 2 - (child.props.height + spacing) / 2
-                acc += child.props.height + spacing
-                const childY = divChildren.length > 1 ? y + yOffset : y
                 return cloneElement(child, {
                   y: childY,
                   z: z + 1,
@@ -68,7 +68,7 @@ function Div({ width, height, spring, y, z, curve, level, uniforms, selected, hu
             offset: { value: new Vector3(0, z - 6, y) },
             uRotation: { value: new Matrix4().makeRotationFromEuler(new Euler(0, 0, 0)) },
           }}
-          key={y}
+          key={[y, z]}
         />
       </RoundedBox>
       <animated.mesh

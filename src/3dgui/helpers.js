@@ -55,8 +55,7 @@ export const flowShader = `
   uniform vec3 offset;
 
   void main() {
-    vec3 pos = (uRotation * vec4(position, 1.0)).xyz;
-    pos += offset;
+    vec3 pos = (uRotation * vec4(position, 1.0)).xyz + offset;
     float t = (time + pos.z) / curveLength;
 
     float min = -0.475;

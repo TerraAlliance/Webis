@@ -33,7 +33,8 @@ function Button({ element, hue, ...props }) {
           {
             style: {
               backgroundColor: getRandomColor(),
-              height: "100px",
+              height: "auto",
+              minHeight: "100px",
               width: "100%",
               display: "flex",
               alignItems: "center",
@@ -65,6 +66,9 @@ function Button({ element, hue, ...props }) {
       case "button":
         createElement(element, { style: { color: "black" } }, "Click me!", selected || [])
         break
+      case "img":
+        createElement(element, { src: "./cat" + getRandom() + ".webp" }, null, selected || [])
+        break
     }
   }
 
@@ -84,6 +88,11 @@ function Button({ element, hue, ...props }) {
     </ScrollDiv>
   )
 }
+
+const getRandom = (() => {
+  let nums = []
+  return () => (nums.length === 0 && (nums = [...Array(12).keys()].map((n) => n + 1)), nums.splice(Math.floor(Math.random() * nums.length), 1)[0])
+})()
 
 function getRandomColor() {
   return (

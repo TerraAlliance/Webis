@@ -9,11 +9,11 @@ export const Display = observer(function Component({ x, y, z, width, height }) {
   const elements = app.elements.get()
   const container = useRef(null)
 
-  useEffect(() => {
-    if (container.current) {
-      container.current.scrollTop = container.current.scrollHeight
-    }
-  }, [elements])
+  // useEffect(() => {
+  //   if (container.current) {
+  //     container.current.scrollTop = container.current.scrollHeight
+  //   }
+  // }, [elements])
 
   return (
     <group position={[x, y, z]}>

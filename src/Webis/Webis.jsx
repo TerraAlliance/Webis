@@ -43,7 +43,7 @@ export const Webis = observer(function Component() {
 })
 
 function sidebars() {
-  const htmlElements = ["div", "p", "span", "h1", "h2", "h3", "h4", "h5", "h6", "a", "button"]
+  const htmlElements = ["div", "p", "span", "h1", "h2", "h3", "h4", "h5", "h6", "a", "button","img"]
   const style = app.selected.style.get()
 
   return [<Sidebar key="html" grow={1} buttonTexts={htmlElements} />, <Sidebar key="css" grow={1} buttonTexts={Object.keys(style || [])} hue={0} />]
