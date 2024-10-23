@@ -79,6 +79,6 @@ export function countChildrenOfType(children, type) {
 
 export function filterChildrenByType(children, type) {
   return Children.toArray(children).filter((child) => {
-    return child.type.name === type
+    return child.type.displayName === type
   })
 }
