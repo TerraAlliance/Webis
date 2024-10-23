@@ -23,7 +23,8 @@ export function ScrollDiv({ y, z, width, height, uniforms, spring, curve, childr
       })}
     >
       <Div y={y} z={z} width={width} height={height} spring={spring} curve={curve} level={level} uniforms={uniforms} selected={selected} hue={hue} {...props} />
-      {Children.map(children, (child, i) => {
+      {Children.map(Children.toArray(children), (child, i) => {
+        console.log(child.type.name)
         return (
           <Switch key={i} value={child.type.name}>
             {{

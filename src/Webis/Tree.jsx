@@ -43,7 +43,7 @@ const renderComponents = (tree, parentY) => {
         onClick={(e) => (e.stopPropagation(), app.selected.id.set(id), app.selected.style.set(props.style))}
       >
         <ScrollTag tag={component} />
-        {...Array.isArray(children) ? renderComponents(children, y) : []}
+        {Array.isArray(children) ? renderComponents(children, y) : null}
       </ScrollDiv>
     )
   })
