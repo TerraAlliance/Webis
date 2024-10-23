@@ -3,7 +3,7 @@ import { enableReactTracking } from "@legendapp/state/config/enableReactTracking
 enableReactTracking({ auto: true })
 
 import GUN from "gun"
-import "https://cdn.jsdelivr.net/npm/gun/lib/open.js"
+// import "https://cdn.jsdelivr.net/npm/gun/lib/open.js"
 
 export const app = observable({ elements: [] })
 
