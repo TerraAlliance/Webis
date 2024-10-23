@@ -68,6 +68,7 @@ function Div({ width, height, spring, y, z, curve, level, uniforms, selected, hu
             offset: { value: new Vector3(0, z - 6, y) },
             uRotation: { value: new Matrix4().makeRotationFromEuler(new Euler(0, 0, 0)) },
           }}
+          key={y}
         />
       </RoundedBox>
       <animated.mesh
