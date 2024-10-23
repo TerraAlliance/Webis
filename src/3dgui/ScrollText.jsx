@@ -39,3 +39,5 @@ export function ScrollText({ y, z, width, height, uniforms, fontSize = 20, color
     </Text>
   )
 }
+
+ScrollText.displayName = "ScrollText"

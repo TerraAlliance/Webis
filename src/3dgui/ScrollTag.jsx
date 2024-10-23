@@ -8,3 +8,5 @@ export function ScrollTag({ tag, singleLine = true, ...props }) {
     </>
   )
 }
+
+ScrollTag.displayName = "ScrollTag"
