@@ -5,7 +5,7 @@ import { Text } from "@react-three/drei"
 // import { Text } from "./Text"
 import { flowShader } from "./helpers"
 
-export function ScrollingText({ y, z, width, height, uniforms, fontSize = 20, color, location, ...props }) {
+export function ScrollText({ y, z, width, height, uniforms, fontSize = 20, color, location, ...props }) {
   const left = -width / 2 + 5
   const right = width / 2 - 5
   const top = height / 2 - 15

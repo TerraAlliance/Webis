@@ -1,26 +1,30 @@
-import { cloneElement } from "react"
+import { cloneElement, Children } from "react"
 
-export function Flexbox({ position, width, height, spacing, children }) {
-  const totalGrow = children.reduce((sum, child) => sum + (child.props.grow || 0), 0);
-  const availableWidth = width - spacing * (children.length + 1);
-  const childWidths = children.map((child) => ((child.props.grow || 0) / totalGrow) * availableWidth);
+export function Flexbox({ x = 0, y = 0, z = 0, width, height, spacing, children, direction = "row" }) {
+  const totalGrow = children.reduce((sum, child) => sum + (child.props.grow || 0), 0)
 
-  let currentXPosition = -width / 2 + spacing;
+  const availableSize = direction === "row" ? width - spacing * (children.length - 1) : height - spacing * (children.length - 1)
+  const childSizes = children.map((child) => ((child.props.grow || 0) / totalGrow) * availableSize)
+
+  let acc = direction === "row" ? -width / 2 : height / 2
 
   return (
-    <group position={position}>
-      {children.map((child, index) => {
-        const childWidth = childWidths[index];
-        const childPositionX = currentXPosition + childWidth / 2;
-        currentXPosition += childWidth + spacing;
+    <group position={[x, y, z]}>
+      {Children.map(children, (child, i) => {
+        const childSize = childSizes[i]
+        const positionOffset = direction === "row" ? acc + childSize / 2 : acc - childSize / 2
+        direction === "row" ? (acc += childSize + spacing) : (acc -= childSize + spacing)
+
+        const childProps =
+          direction === "row"
+            ? { x: positionOffset, y: 0, z: 0, width: childSize, height: height }
+            : { x: 0, y: positionOffset, z: 0, width: width, height: childSize }
 
         return cloneElement(child, {
-          key: index,
-          width: childWidth,
-          height: height - spacing * 2,
-          position: [childPositionX, 0, 0],
-        });
+          ...childProps,
+          key: i,
+        })
       })}
     </group>
-  );
+  )
 }

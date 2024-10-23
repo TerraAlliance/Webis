@@ -1,21 +1,19 @@
-import { useMemo } from "react"
 import { observer } from "@legendapp/state/react"
 
-import { ScrollingDiv } from "../3dgui/ScrollingDiv"
-import { ScrollingWindow } from "../3dgui/ScrollingWindow"
-import { ScrollingTag } from "../3dgui/ScrollingTag"
+import { ScrollDiv } from "../3dgui/ScrollDiv"
+import { ScrollWindow } from "../3dgui/ScrollWindow"
+import { ScrollTag } from "../3dgui/ScrollTag"
 import { app } from "./state"
 
-export const Tree = observer(function Component({ position, width, height }) {
+export const Tree = observer(function Component({ x, y, z, width, height }) {
   const elements = app.elements.get()
-
   const components = elements && renderComponents(elements)
 
   return (
-    <group position={position}>
-      <ScrollingWindow width={width} height={height}>
+    <group position={[x, y, z]}>
+      <ScrollWindow width={width} height={height} onClick={(e) => (e.stopPropagation(), app.selected.set(undefined))}>
         {components}
-      </ScrollingWindow>
+      </ScrollWindow>
     </group>
   )
 })
@@ -26,38 +24,38 @@ const height = 30
 const renderComponents = (tree, parentY) => {
   let acc = 0
 
-  return tree.map((element, i) => {
-    const { component, id, children } = element
+  return tree.map((element) => {
+    const { component, props, children, id } = element
 
     const y = acc - (height + spacing) / 2
     acc -= height + spacing
 
-    const totalChildren = Array.isArray(children) ? countChildren(children) : 0
-    const maxDepth = Array.isArray(children) ? countMaxDepth(children) : 0
-    const childHeight = totalChildren > 0 ? totalChildren * (height + spacing) + maxDepth * height * 2 : height
-
-    const components = Array.isArray(children) ? renderComponents(children, y) : []
+    const maxDepth = Array.isArray(children) ? countDepth(children) : 0
+    const totalChildren = Array.isArray(children) ? countChildren(children) - maxDepth : 0
 
     return (
-      <ScrollingDiv
+      <ScrollDiv
         key={id}
-        y={parentY ? parentY : y}
-        height={childHeight}
+        y={parentY || y}
+        height={totalChildren > 0 ? totalChildren * height + (totalChildren - 1) * spacing + (maxDepth + 1) * height * 2 : height}
         spacing={spacing}
-        selected={app.selected.get() === id}
-        onClick={(e) => (e.stopPropagation(), app.selected.set(id))}
+        selected={app.selected.id.get() === id}
+        onClick={(e) => (e.stopPropagation(), app.selected.id.set(id), app.selected.style.set(props.style))}
       >
-        <ScrollingTag tag={component} />
-        {...components}
-      </ScrollingDiv>
+        <ScrollTag tag={component} />
+        {Array.isArray(children) ? renderComponents(children, y) : null}
+      </ScrollDiv>
     )
   })
 }
 
 const countChildren = (children) => children.reduce((count, child) => count + 1 + (Array.isArray(child.children) ? countChildren(child.children) : 0), 0)
 
-const countMaxDepth = (children, depth = 1) =>
-  children.reduce(
-    (maxDepth, child) => (Array.isArray(child.children) && child.children.length > 0 ? Math.max(maxDepth, countMaxDepth(child.children, depth + 1)) : maxDepth),
-    depth
-  )
+const countDepth = (children) => {
+  return children.reduce((totalDepth, child) => {
+    if (Array.isArray(child.children) && child.children.length > 0) {
+      return totalDepth + 1 + countDepth(child.children)
+    }
+    return totalDepth
+  }, 0)
+}

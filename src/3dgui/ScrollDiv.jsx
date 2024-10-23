@@ -1,4 +1,4 @@
-import { useState, cloneElement } from "react"
+import { useState, cloneElement, Children } from "react"
 import { MeshBasicMaterial, Vector3, Matrix4, Euler } from "three"
 import { animated } from "@react-spring/three"
 import { Switch, Show } from "@legendapp/state/react"
@@ -9,9 +9,9 @@ import { flowShader, hsl, filterChildrenByType } from "./helpers"
 
 const AnimatedShow = animated(Show)
 
-export function ScrollingDiv({ y, z, width, height, uniforms, spring, curve, children, spacing, level = 0, selected, ...props }) {
+export function ScrollDiv({ y, z, width, height, uniforms, spring, curve, children, spacing, level = 0, hue = 220, selected, ...props }) {
   let acc = 0
-  const divChildren = filterChildrenByType(children, "ScrollingDiv")
+  const divChildren = filterChildrenByType(children, "ScrollDiv")
   const totalHeight = divChildren.reduce((a, v) => a + v.props.height + spacing, 0)
   const singleLine = divChildren.length > 0 ? false : true
 
@@ -19,41 +19,39 @@ export function ScrollingDiv({ y, z, width, height, uniforms, spring, curve, chi
     <AnimatedShow
       if={spring.to((v) => {
         const value = (y + v) / curve.getLength()
-        return value < 0.05 + height / curve.getLength() / 2 && value > -0.5 - height / curve.getLength()
+        return value < 0.025 + height / curve.getLength() / 2 && value > -0.475 - height / curve.getLength()
       })}
     >
-      <Div y={y} z={z} width={width} height={height} spring={spring} curve={curve} level={level} uniforms={uniforms} selected={selected} {...props} />
-      {children &&
-        (Array.isArray(children) ? children : [children]).map((child, i) => {
-          return (
-            <Switch key={i} value={child.type.name}>
-              {{
-                ScrollingDiv: () => {
-                  const yOffset = -acc + totalHeight / 2 - (child.props.height + spacing) / 2
-                  acc += child.props.height + spacing
-                  const childY = divChildren.length > 1 ? y + yOffset : y
-                  return cloneElement(child, {
-                    y: childY,
-                    z: z + 1,
-                    uniforms: uniforms,
-                    spring: spring,
-                    width: width - 20,
-                    curve: curve,
-                    level: level + 1,
-                  })
-                },
-                ScrollingText: () => cloneElement(child, { y: y, z: z + 1, width: width, height: height, uniforms: uniforms, curve: curve }),
-                ScrollingTag: () =>
-                  cloneElement(child, { y: y, z: z + 1, width: width, height: height, uniforms: uniforms, singleLine: singleLine, curve: curve }),
-              }}
-            </Switch>
-          )
-        })}
+      <Div y={y} z={z} width={width} height={height} spring={spring} curve={curve} level={level} uniforms={uniforms} selected={selected} hue={hue} {...props} />
+      {Children.map(Children.toArray(children), (child, i) => {
+        return (
+          <Switch key={i} value={child.type.name}>
+            {{
+              ScrollDiv: () => {
+                const yOffset = -acc + totalHeight / 2 - (child.props.height + spacing) / 2
+                acc += child.props.height + spacing
+                const childY = divChildren.length > 1 ? y + yOffset : y
+                return cloneElement(child, {
+                  y: childY,
+                  z: z + 1,
+                  uniforms: uniforms,
+                  spring: spring,
+                  width: width - 20,
+                  curve: curve,
+                  level: level + 1,
+                })
+              },
+              ScrollText: () => cloneElement(child, { y: y, z: z + 1, width: width, height: height, uniforms: uniforms, curve: curve }),
+              ScrollTag: () => cloneElement(child, { y: y, z: z + 1, width: width, height: height, uniforms: uniforms, singleLine: singleLine, curve: curve }),
+            }}
+          </Switch>
+        )
+      })}
     </AnimatedShow>
   )
 }
 
-function Div({ width, height, spring, y, z, curve, level, uniforms, selected, ...props }) {
+function Div({ width, height, spring, y, z, curve, level, uniforms, selected, hue, ...props }) {
   const [hovered, setHover] = useState(false)
 
   return (
@@ -64,7 +62,7 @@ function Div({ width, height, spring, y, z, curve, level, uniforms, selected, ..
           transparent={true}
           opacity={hovered || selected ? 0.4 : 0.2}
           vertexShader={flowShader}
-          color={hovered || selected ? "red" : hsl(220 + level * 30, 100, 50)}
+          color={hovered || selected ? "red" : hsl(hue + level * 30, 100, 50)}
           uniforms={{
             ...uniforms,
             offset: { value: new Vector3(0, z - 6, y) },

@@ -1,18 +1,11 @@
-import { createElement } from "react"
+import { useEffect, useRef } from "react"
 import { Html } from "@react-three/drei"
+import { observer } from "@legendapp/state/react"
+
 import { Window } from "../3dgui/Window"
 import { app } from "./state"
 
-const renderElements = (elements) => {
-  return elements.map((element, i) => {
-    const { component, props, children } = element
-    return createElement(component, { ...props, key: i }, Array.isArray(children) ? renderElements(children) : children)
-  })
-}
-
-import { useEffect, useRef } from "react"
-
-export function Display({ position, width, height }) {
+export const Display = observer(function Component({ x, y, z, width, height }) {
   const elements = app.elements.get()
   const container = useRef(null)
 
@@ -23,17 +16,16 @@ export function Display({ position, width, height }) {
   }, [elements])
 
   return (
-    <group position={position}>
+    <group position={[x, y, z]}>
       <Window width={width} height={height} />
       <Html
-        position={[0, 0, 25.5]}
+        position={[0, 0, 15.1]}
         distanceFactor={400}
         transform={true}
         occlude={true}
         style={{
-          width: width - 40 + "px",
-          height: height - 40 + "px",
-          backgroundColor: "white",
+          width: width + "px",
+          height: height + "px",
           userSelect: "none",
           overflowY: "hidden",
           borderRadius: "10px",
@@ -45,6 +37,8 @@ export function Display({ position, width, height }) {
             width: "100%",
             height: "100%",
             overflowY: "scroll",
+            overflowX: "hidden",
+            backgroundColor: "white",
           }}
         >
           {renderElements(elements)}
@@ -52,4 +46,25 @@ export function Display({ position, width, height }) {
       </Html>
     </group>
   )
+})
+
+function renderElements(elements) {
+  return elements.map((element) => {
+    const { component: Component, props, children, id } = element
+    return (
+      <Component
+        {...props}
+        key={id}
+        style={{
+          ...props?.style,
+          backgroundImage:
+            app.selected.id.get() === id
+              ? "repeating-linear-gradient(-45deg, rgba(255,0,0, 0.5), rgba(255,0,0, 0.5) 5px, transparent 5px,  transparent 10px)"
+              : null,
+        }}
+      >
+        {Array.isArray(children) ? renderElements(children) : children}
+      </Component>
+    )
+  })
 }

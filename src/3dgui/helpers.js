@@ -59,8 +59,8 @@ export const flowShader = `
     pos += offset;
     float t = (time + pos.z) / curveLength;
 
-    float min = -0.5;
-    float max = 0.05;
+    float min = -0.475;
+    float max = 0.025;
     t = clamp(t, min, max);
 
     vec3 point = texture2D(data, vec2(t, (0.5) / 4.)).xyz;
