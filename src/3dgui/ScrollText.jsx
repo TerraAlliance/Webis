@@ -34,7 +34,7 @@ export function ScrollText({ y, z, width, height, uniforms, fontSize = 20, color
           offset: { value: new Vector3(0, z, y + yPos) },
           uRotation: { value: new Matrix4().makeRotationFromEuler(new Euler(-Math.PI / 2, 0, -Math.PI)) },
         }}
-        key={[location, yPos, y, z]}
+        key={[location, yPos, y]}
       />
     </Text>
   )

@@ -23,7 +23,7 @@ export function ScrollDiv({ y, z, width, height, uniforms, spring, curve, childr
       })}
     >
       <Div y={y} z={z} width={width} height={height} spring={spring} curve={curve} level={level} uniforms={uniforms} selected={selected} hue={hue} {...props} />
-      {Children.map(Children.toArray(children), (child, i) => {
+      {Children.map(children, (child, i) => {
         return (
           <Switch key={i} value={child.type.name}>
             {{
@@ -68,7 +68,7 @@ function Div({ width, height, spring, y, z, curve, level, uniforms, selected, hu
             offset: { value: new Vector3(0, z - 6, y) },
             uRotation: { value: new Matrix4().makeRotationFromEuler(new Euler(0, 0, 0)) },
           }}
-          key={[y, z]}
+          key={[y]}
         />
       </RoundedBox>
       <animated.mesh
