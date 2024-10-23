@@ -7,8 +7,6 @@ import GUN from "gun"
 
 export const app = observable({ elements: [] })
 
-localStorage.clear()
-
 const gun = GUN()
 const webis = gun.get("webis")
 
@@ -16,8 +14,9 @@ const elements = webis.get("elements")
 
 let elementsArray = []
 
-elements.once((data) => data && (elementsArray = JSON.parse(data)))
+// elements.once((data) => data && (elementsArray = JSON.parse(data)))
 elements.on((data) => app.elements.set(JSON.parse(data)))
+app.elements.set([])
 
 export function createElement(component, props, children, parentPath, i) {
   const targetArray = parentPath?.reduce((current, i) => current[i].children, elementsArray) || elementsArray
