@@ -1,5 +1,6 @@
 import { Canvas } from "@react-three/fiber"
-import { OrthographicCamera, OrbitControls, Stats } from "@react-three/drei"
+import { OrthographicCamera, OrbitControls } from "@react-three/drei"
+// import { Stats } from "@react-three/drei"
 
 export default function App({ children }) {
   return (
