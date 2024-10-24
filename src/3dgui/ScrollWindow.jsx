@@ -10,8 +10,9 @@ import { hsl, dataTexture } from "./helpers"
 export function ScrollWindow({ x = 0, y = 0, z = 0, width, height, children, childHeight, spacing = 5, ...props }) {
   const scroll = useRef(0)
   const pointCount = 1000
+  const radius = 20
 
-  const curve = useMemo(() => createCapsuleCurve(30, height + 15), [height])
+  const curve = useMemo(() => createCapsuleCurve(radius, height), [height])
   const data = useMemo(() => dataTexture(curve, pointCount), [curve])
 
   const uniforms = useRef({
@@ -51,6 +52,7 @@ export function ScrollWindow({ x = 0, y = 0, z = 0, width, height, children, chi
           z: 0,
           width: width - 20,
           height: child.props.height || childHeight,
+          wheight: height - radius * 2,
           uniforms: uniforms,
           spring: spring,
           color: hsl(220, 100, 50),

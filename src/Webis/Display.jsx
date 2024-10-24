@@ -51,16 +51,16 @@ export const Display = observer(function Component({ x, y, z, width, height }) {
 function renderElements(elements) {
   return elements.map((element) => {
     const { component: Component, props, children, id } = element
+    const isSelected = app.selected.id.get() === id
     return (
       <Component
         {...props}
         key={id}
         style={{
           ...props?.style,
-          backgroundImage:
-            app.selected.id.get() === id
-              ? "repeating-linear-gradient(-45deg, rgba(255,0,0, 0.5), rgba(255,0,0, 0.5) 5px, transparent 5px,  transparent 10px)"
-              : null,
+          backgroundImage: isSelected
+            ? "repeating-linear-gradient(-45deg, rgba(255,0,0, 0.5), rgba(255,0,0, 0.5) 5px, transparent 5px,  transparent 10px)"
+            : null,
         }}
       >
         {Array.isArray(children) ? renderElements(children) : children}
