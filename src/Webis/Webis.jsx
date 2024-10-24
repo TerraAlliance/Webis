@@ -4,26 +4,10 @@ import { observer } from "@legendapp/state/react"
 import { Flexbox } from "../3dgui/Flexbox"
 import { Display } from "./Display"
 import { Tree } from "./Tree"
-import { Sidebar } from "./Sidebar"
-import { app } from "./state"
 
-// export function Webis() {
-//   const size = useWindowSize()
+import { Createbar } from "./Createbar"
+import { Propbar } from "./Propbar"
 
-//   if (size.height === null) {
-//     return null
-//   }
-
-//   return (
-//     <Flexbox y={0} width={size.width - 40} height={size.height - 40} spacing={20}>
-//       <Display grow={4} />
-//       <Tree grow={4} />
-//       <Flexbox spacing={20} grow={1} direction={"column"}>
-//         {sidebars()}
-//       </Flexbox>
-//     </Flexbox>
-//   )
-// }
 export const Webis = observer(function Component() {
   const size = useWindowSize()
 
@@ -36,15 +20,9 @@ export const Webis = observer(function Component() {
       <Display grow={4} />
       <Tree grow={4} />
       <Flexbox spacing={20} grow={1} direction={"column"}>
-        {sidebars()}
+        <Createbar grow={1} />
+        <Propbar grow={1} />
       </Flexbox>
     </Flexbox>
   )
 })
-
-function sidebars() {
-  const htmlElements = ["div", "p", "span", "h1", "h2", "h3", "h4", "h5", "h6", "a", "button","img"]
-  const style = app.selected.style.get()
-
-  return [<Sidebar key="html" grow={1} buttonTexts={htmlElements} />, <Sidebar key="css" grow={1} buttonTexts={Object.keys(style || [])} hue={0} />]
-}

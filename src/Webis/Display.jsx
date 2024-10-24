@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 import { Html } from "@react-three/drei"
 import { observer } from "@legendapp/state/react"
 

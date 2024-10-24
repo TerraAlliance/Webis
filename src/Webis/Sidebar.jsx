@@ -7,7 +7,7 @@ import { createElement } from "./state"
 
 import { app } from "./state"
 
-export function Sidebar({ x, y, z, width, height, buttonTexts, hue, ...props }) {
+export function Sidebar({ x = 0, y = 0, z = 0, width, height, buttonTexts, hue, ...props }) {
   return (
     <group position={[x, y, z]}>
       <ScrollWindow width={width} height={height} childHeight={30}>
