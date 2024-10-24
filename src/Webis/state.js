@@ -27,3 +27,17 @@ export function createElement(component, props, children, parentPath, i) {
   targetArray.splice(index ?? targetArray.length, 0, { component, id: id, props, children: children })
   elements.put(JSON.stringify(elementsArray))
 }
+
+// export function editElement(component, props, children, parentPath, i) {
+//   const targetArray = parentPath?.reduce((current, i) => current[i].children, elementsArray) || elementsArray
+
+//   const index = i ?? 0
+
+//   const elementToEdit = targetArray[index]
+
+//   elementToEdit.component = component ?? elementToEdit.component
+//   elementToEdit.props = props ?? elementToEdit.props
+//   elementToEdit.children = children ?? elementToEdit.children
+
+//   elements.put(JSON.stringify(elementsArray))
+// }

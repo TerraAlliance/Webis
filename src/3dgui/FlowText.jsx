@@ -5,7 +5,7 @@ import { Text } from "@react-three/drei"
 // import { Text } from "./Text"
 import { flowShader } from "./helpers"
 
-export function ScrollText({ y, z, width, height, uniforms, fontSize = 20, color, location, ...props }) {
+export function FlowText({ y, z, width, height, uniforms, fontSize = 20, color, location, ...props }) {
   const left = -width / 2 + 5
   const right = width / 2 - 5
   const top = height / 2 - 15
@@ -25,7 +25,15 @@ export function ScrollText({ y, z, width, height, uniforms, fontSize = 20, color
   const [xPos, yPos] = locationMap[location] || [0, 0]
 
   return (
-    <Text position-x={xPos} fontSize={fontSize} color={color} yPos={yPos} location={location} {...props}>
+    <Text
+      position-x={xPos}
+      fontSize={fontSize}
+      color={color}
+      yPos={yPos}
+      location={location}
+      clipRect={[-width / 2, -height / 2, width / 2, height / 2]}
+      {...props}
+    >
       <CustomShaderMaterial
         baseMaterial={MeshBasicMaterial}
         vertexShader={flowShader}
@@ -34,10 +42,10 @@ export function ScrollText({ y, z, width, height, uniforms, fontSize = 20, color
           offset: { value: new Vector3(0, z, y + yPos) },
           uRotation: { value: new Matrix4().makeRotationFromEuler(new Euler(-Math.PI / 2, 0, -Math.PI)) },
         }}
-        key={[location, yPos, y]}
+        key={y}
       />
     </Text>
   )
 }
 
-ScrollText.displayName = "ScrollText"
+FlowText.displayName = "FlowText"

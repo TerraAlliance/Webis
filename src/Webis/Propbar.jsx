@@ -1,4 +1,4 @@
-import { Sidebar } from "./Sidebar"
+import { Sidebar } from "../3dgui/Sidebar"
 import { app } from "./state"
 
 export function Propbar({ x, y, z, width, height }) {

@@ -9,9 +9,9 @@ import { flowShader, hsl, filterChildrenByType } from "./helpers"
 
 const AnimatedShow = animated(Show)
 
-export function ScrollDiv({ y, z, width, height, wheight, uniforms, spring, curve, children, spacing, level = 0, hue = 220, selected, ...props }) {
+export function FlowDiv({ y, z, width, height, wheight, uniforms, spring, curve, children, spacing, level = 0, hue = 220, selected, ...props }) {
   let acc = 0
-  const divChildren = filterChildrenByType(children, "ScrollDiv")
+  const divChildren = filterChildrenByType(children, "FlowDiv")
   const totalHeight = divChildren.reduce((a, v) => a + v.props.height + spacing, 0)
   const singleLine = divChildren.length > 0 ? false : true
 
@@ -37,25 +37,26 @@ export function ScrollDiv({ y, z, width, height, wheight, uniforms, spring, curv
       />
       {Children.map(Children.toArray(children), (child, i) => {
         const yOffset = -acc + totalHeight / 2 - (child.props.height + spacing) / 2
-        if (child.type.displayName === "ScrollDiv") acc += child.props.height + spacing
+        if (child.type.displayName === "FlowDiv") acc += child.props.height + spacing
         const childY = divChildren.length > 1 ? y + yOffset : y
         return (
           <Switch key={i} value={child.type.displayName}>
             {{
-              ScrollDiv: () => {
+              FlowDiv: () => {
                 return cloneElement(child, {
                   y: childY,
                   z: z,
                   uniforms: uniforms,
                   spring: spring,
-                  width: width - 20,
+                  width: width - 15,
                   wheight: wheight,
                   curve: curve,
                   level: level + 1,
                 })
               },
-              ScrollText: () => cloneElement(child, { y: y, z: z + 5, width: width, height: height, uniforms: uniforms, curve: curve }),
-              ScrollTag: () => cloneElement(child, { y: y, z: z + 5, width: width, height: height, uniforms: uniforms, singleLine: singleLine, curve: curve }),
+              FlowText: () => cloneElement(child, { y: y, z: z + 5, width: width, height: height, uniforms: uniforms, curve: curve }),
+              FlowInput: () => cloneElement(child, { y: y, z: z + 5, width: width, height: height, uniforms: uniforms, curve: curve }),
+              FlowTag: () => cloneElement(child, { y: y, z: z + 5, width: width, height: height, uniforms: uniforms, singleLine: singleLine, curve: curve }),
             }}
           </Switch>
         )
@@ -81,7 +82,7 @@ function Div({ width, height, wheight, spring, y, z, level, uniforms, selected, 
             offset: { value: new Vector3(0, z, y) },
             uRotation: { value: new Matrix4().makeRotationFromEuler(new Euler(0, 0, 0)) },
           }}
-          key={[y]}
+          key={y}
           depthWrite={false}
         />
       </RoundedBox>
@@ -99,4 +100,4 @@ function Div({ width, height, wheight, spring, y, z, level, uniforms, selected, 
   )
 }
 
-ScrollDiv.displayName = "ScrollDiv"
+FlowDiv.displayName = "FlowDiv"

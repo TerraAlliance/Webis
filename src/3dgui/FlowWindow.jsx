@@ -7,7 +7,7 @@ import { useSpringValue } from "@react-spring/three"
 import { Window } from "./Window"
 import { hsl, dataTexture } from "./helpers"
 
-export function ScrollWindow({ x = 0, y = 0, z = 0, width, height, children, childHeight, spacing = 5, ...props }) {
+export function FlowWindow({ x = 0, y = 0, z = 0, width, height, children, childHeight, spacing = 5, ...props }) {
   const scroll = useRef(0)
   const pointCount = 1000
   const radius = 20

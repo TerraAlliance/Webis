@@ -16,10 +16,10 @@ export const Webis = observer(function Component() {
   }
 
   return (
-    <Flexbox y={0} width={size.width - 40} height={size.height - 40} spacing={20}>
+    <Flexbox y={0} width={size.width - 40} height={size.height - 40} spacing={20} direction={size.height > size.width ? "column" : "row"}>
       <Display grow={4} />
       <Tree grow={4} />
-      <Flexbox spacing={20} grow={1} direction={"column"}>
+      <Flexbox spacing={20} grow={1} direction={size.height > size.width ? "row" : "column"}>
         <Createbar grow={1} />
         <Propbar grow={1} />
       </Flexbox>
